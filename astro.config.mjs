@@ -7,7 +7,7 @@ import icon from 'astro-icon';
 
 // https://astro.build/config
 export default defineConfig({
-  // site: '#',
+  site: 'https://nvarsakis.gr',
   // base: '/',
   vite: {
     plugins: [tailwindcss()]

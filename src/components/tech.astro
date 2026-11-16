@@ -84,7 +84,7 @@ try {
                   </span>
                 </div>
 
-                <div class="absolute -bottom-2 -right-1 z-10 flex gap-0 px-1 py-0.5 bg-container rounded-md border border-white/10 shadow-lg group-hover:border-accent/30 transition-all">
+                <div aria-label={`Proficiency: ${["", "Beginner", "Proficient", "Expert"][skill.level]}`} class="absolute -bottom-2 -right-1 z-10 flex gap-0 px-1 py-0.5 bg-container rounded-md border border-white/10 shadow-lg group-hover:border-accent/30 transition-all">
                   {[1, 2, 3].map((star) => (
                     <Icon 
                       name="mdi:star" 

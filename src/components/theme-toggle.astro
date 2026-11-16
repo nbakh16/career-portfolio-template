@@ -47,6 +47,6 @@
     : currentTheme.replace('-light', '-dark');
 
     document.documentElement.setAttribute('data-theme', newTheme);
-    localStorage.setItem('theme', newTheme);
+    try { localStorage.setItem('theme', newTheme); } catch { /* Theme still works without persistence. */ }
   });
 </script>

@@ -15,6 +15,7 @@ interface ProfileData {
   name: string;
   photoUrl: string;
   intro: string;
+  role?: string;
   introHtml: string;
   resumeUrl: string;
   socials: Social[];
@@ -38,7 +39,7 @@ if (isApiLive && BASE_URL) {
   data = localData as ProfileData;
 }
 
-const { name, photoUrl, intro, introHtml, resumeUrl, socials } = data;
+const { name, photoUrl, intro, role, resumeUrl, socials } = data;
 const profileImage = await resolveAssetImage(photoUrl);
 ---
 
@@ -76,50 +77,28 @@ const profileImage = await resolveAssetImage(photoUrl);
     <h1 class="text-5xl md:text-7xl font-heading font-bold text-maintext tracking-tight">
       {name}
     </h1>
-    <br>
+    {role && <p class="mt-5 text-accent font-heading text-xl md:text-2xl font-medium">{role}</p>}
     <p 
-      class="text-gray font-body text-lg leading-relaxed" 
+      class="mt-4 text-subtext font-body text-base md:text-lg leading-relaxed max-w-2xl mx-auto text-pretty"
       set:html={intro} 
     />
   </div>
 
-  <div class="mt-8 mb-4 reveal-content" style="animation-delay: 400ms;">
-    <a 
-      href={resumeUrl} 
-      target="_blank" 
-      rel="noopener noreferrer"
-      class="group relative inline-flex items-center justify-center px-10 py-2 bg-white/5 border border-white/10 rounded-full text-maintext font-body transition-all duration-300
-
-             <!-- /* Mobile: Always active */ -->
-             border-accent/50 bg-accent/10 shadow-[0_0_20px_rgba(var(--accent-rgb),0.3)]
-             
-             <!-- /* Desktop: Reset and hover */ -->
-             md:border-accent/50 md:bg-accent/10 md:shadow-none md:hover:border-accent/50 md:hover:bg-accent/10 md:hover:shadow-[0_0_20px_rgba(var(--accent-rgb),0.3)] 
-             hover:scale-105"
-    >
-      <div class="flex flex-col items-center justify-center text-center">
-        <span class="tracking-wide text-sm md:text-base font-medium transition-transform duration-300 md:translate-y-2 md:group-hover:translate-y-0">
-          View Resume
-        </span>
-        
-        <span class="text-[10px] text-subtext font-light whitespace-nowrap transition-all duration-300 
-                     /* Mobile: Always visible */
-                     opacity-100 translate-y-0 
-                     /* Desktop: Hidden until hover */
-                     md:opacity-0 md:translate-y-1 md:group-hover:opacity-100 md:group-hover:translate-y-0">
-          Downloads PDF file
-        </span>
-      </div>
-      
-      <div class="absolute inset-0 rounded-full blur-md bg-accent/20 -z-10 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-500"></div>
-    </a>
-</div>
+  <div class="mt-8 mb-4 flex flex-wrap justify-center gap-3 reveal-content" style="animation-delay: 400ms;">
+    <a href="#projects" class="inline-flex items-center justify-center min-h-12 px-6 py-3 rounded-full bg-accent text-background font-medium hover:opacity-90 transition-opacity">View projects</a>
+    <a href="#contact" class="inline-flex items-center justify-center min-h-12 px-6 py-3 rounded-full border border-accent/40 text-maintext hover:bg-accent/10 transition-colors">Get in touch</a>
+    {resumeUrl?.trim() && resumeUrl.trim() !== '#' && (
+      <a href={resumeUrl} target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center min-h-12 px-6 py-3 rounded-full border border-accent/40 text-maintext hover:bg-accent/10 transition-colors">View résumé</a>
+    )}
+  </div>
 
   <div class="flex gap-6 mt-4 reveal-content" style="animation-delay: 500ms;">
     {socials.filter((social) => social.url && social.url !== "#" && social.url !== "").map((social) => (
       <a 
         href={social.url} 
-        target="_blank" 
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={social.name}
         class="group relative flex flex-col items-center justify-center transition-all duration-300 hover:scale-110"
       >
         <Icon 

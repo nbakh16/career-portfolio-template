@@ -166,3 +166,45 @@
 ::-webkit-scrollbar-thumb:hover {
   background-color: color-mix(in srgb, var(--color-accent), transparent 25%);
 }
+
+/* Native fragment links preserve history and keyboard navigation. */
+html { scroll-behavior: smooth; }
+section[id] { scroll-margin-top: 6rem; }
+a:focus-visible, button:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 5px;
+}
+.skip-link {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 100;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  background: var(--color-accent);
+  color: var(--color-background);
+  transform: translateY(-200%);
+}
+.skip-link:focus { transform: none; }
+#main-nav:focus-within {
+  transform: translate3d(0, 0, 0) !important;
+}
+@media (max-width: 767px) {
+  #main-nav { padding-bottom: env(safe-area-inset-bottom); }
+  body { padding-bottom: calc(5rem + env(safe-area-inset-bottom)); }
+  #to-top { bottom: calc(6rem + env(safe-area-inset-bottom)); right: 1rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto !important; }
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+  .reveal-content, .project-header, .project-card, .tech-header,
+  .skill-card, .scroll-stat, .contact-header, .contact-card, .contact-footer {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+  }
+  #matrix-container { display: none; }
+}

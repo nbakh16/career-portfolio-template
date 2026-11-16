@@ -1,11 +1,10 @@
 {
   "name": "Nikonas Varsakis",
   "photoUrl": "favicon.svg",
-  "intro": "An Informatics and Computer Engineering student working in the IT industry,<br>installing and configuring FreePBX, Yeastar, and Fortigate Firewalls,<br>and providing comprehensive IT Support.",
+  "intro": "I configure VoIP systems, secure networks, and provide hands-on IT support. Currently completing my BSc in Informatics and Computer Engineering at the University of West Attica.",
   "introHtml": "An Informatics and Computer Engineering student working in the IT industry. I specialize in installing and configuring <span class='text-white font-bold'>FreePBX</span> and Yeastar call centers, managing <span class='text-white font-bold'>Fortigate Firewalls</span>, and providing comprehensive <span class='text-white font-bold'>IT Support</span>.",
-  "webpageTitle": "Nikonas Varsakis",
+  "webpageTitle": "Nikonas Varsakis | IT, Networking & VoIP",
   "resumeUrl": "",
-
   "_comment": "Add your social links below. Leave the 'url' empty to hide the icon. Set 'showInContact' to true or false to control if it appears in the Contact section.",
   "socials": [
     {
@@ -68,5 +67,7 @@
       "icon": "mdi:twitter",
       "showInContact": false
     }
-  ]
+  ],
+  "role": "IT & Telephony Systems Technician",
+  "description": "IT and telephony technician specializing in FreePBX, Yeastar, network infrastructure, and IT support. Explore my projects and experience."
 }

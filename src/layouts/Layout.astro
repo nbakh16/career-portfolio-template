@@ -1,46 +1,76 @@
 ---
 import '../styles/global.css'
+import profile from '../data/home.json';
 import { SITE_CONFIG } from '../config.ts';
 
 interface Props {
   title: string;
+  description?: string;
 }
 
-const { title } = Astro.props;
+const { title, description = profile.description } = Astro.props;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
 const baseTheme = SITE_CONFIG.baseTheme;
 const defaultTheme = `${baseTheme}-dark`;
 ---
 
 <!doctype html>
-<html lang="en" data-theme="default-dark">
+<html lang="en" data-theme={defaultTheme}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/x-icon" href="/favicon.ico?v=2" ./>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico?v=2" />
     <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <noscript>
+      <style is:global>
+        .project-header, .project-card, .tech-header, .skill-card,
+        .scroll-stat, .contact-header, .contact-card, .contact-footer,
+        .reveal-content {
+          opacity: 1 !important;
+          visibility: visible !important;
+          transform: none !important;
+          animation: none !important;
+        }
+        #theme-toggle-wrapper, #to-top { display: none !important; }
+      </style>
+    </noscript>
 
     <!-- THEME TOGGLE SCRIPT -->
     <script is:inline define:vars={{ baseTheme, defaultTheme }}>
-      const savedTheme = localStorage.getItem('theme');
+      try {
+        const savedTheme = localStorage.getItem('theme');
 
-      if (savedTheme && savedTheme.startsWith(baseTheme)) {
+        if (savedTheme === `${baseTheme}-dark` || savedTheme === `${baseTheme}-light`) {
         document.documentElement.setAttribute('data-theme', savedTheme);
       } else {
         document.documentElement.setAttribute('data-theme', defaultTheme);
         localStorage.setItem('theme', defaultTheme);
       }
+      } catch { /* Keep the server-rendered theme when storage is unavailable. */ }
     </script>
 
   </head>
   <body class="bg-container relative min-h-screen overflow-x-hidden antialiased">
+    <a href="#main-content" class="skip-link">Skip to content</a>
     <div 
+      aria-hidden="true"
       id="matrix-container" 
       class="fixed top-0 left-0 w-full h-full -z-10 pointer-events-none"
       style="mask-image: linear-gradient(to bottom, black 0%, black 80%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 0%, black 80%, transparent 100%);"
     ></div>
 
-    <main class="px-2 sm:px-12 md:px-14 lg:px-28 max-w-360 mx-auto relative z-0">
+    <main id="main-content" tabindex="-1" class="px-2 sm:px-12 md:px-14 lg:px-28 max-w-360 mx-auto relative z-0">
         <slot />
     </main>
 
@@ -78,7 +108,7 @@ const defaultTheme = `${baseTheme}-dark`;
       const colors = ["#FF4500", "#32CD32", "#1E90FF", "#FFD700", "#8A2BE2", "#FF1493"];
 
       function createLetter() {
-        if (!container) return;
+        if (!container || window.matchMedia('(prefers-reduced-motion: reduce)').matches || document.hidden) return;
 
         const span = document.createElement('span');
         const char = characters[Math.floor(Math.random() * characters.length)];
@@ -107,10 +137,11 @@ const defaultTheme = `${baseTheme}-dark`;
       }
 
 
-      if (window.innerWidth > 768) {
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+      if (!reducedMotion.matches && window.innerWidth > 768) {
         // one letter every 250ms
         setInterval(createLetter, 250);
-      } else {
+      } else if (!reducedMotion.matches) {
         // Static scatter effect for mobile optimization
         const mobileCount = 20; 
         for (let i = 0; i < mobileCount; i++) {
@@ -119,7 +150,7 @@ const defaultTheme = `${baseTheme}-dark`;
       }
 
       function createStaticLetter() {
-        if (!container) return;
+        if (!container || window.matchMedia('(prefers-reduced-motion: reduce)').matches || document.hidden) return;
 
         const span = document.createElement('span');
         const char = characters[Math.floor(Math.random() * characters.length)];
@@ -153,7 +184,7 @@ const defaultTheme = `${baseTheme}-dark`;
 
       function handleScroll() {
         const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
-        const scrollPercentage = window.scrollY / scrollHeight;
+        const scrollPercentage = scrollHeight > 0 ? window.scrollY / scrollHeight : 0;
         
         // Update the Circle Progress
         const offset = circumference - (scrollPercentage * circumference);
@@ -185,6 +216,10 @@ const defaultTheme = `${baseTheme}-dark`;
       // });
 
       toTopBtn?.addEventListener('click', () => {
+      if (reducedMotion.matches) {
+        window.scrollTo({ top: 0, behavior: 'instant' });
+        return;
+      }
       arrowIcon?.classList.add('launching');
 
       const startPosition = window.scrollY;
